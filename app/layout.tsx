@@ -6,6 +6,7 @@ import Footer from '../components/Footer/Footer';
 import TanStackProvider from '../components/TanStackProvider/TanStackProvider';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+import AuthProvider from '@/components/AuthProvider/AuthProvider';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -27,21 +28,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children, modal }: Readonly<{
-  children: ReactNode;
-  modal: ReactNode;
- }>) {
+export default function RootLayout({
+  children,
+  modal,
+}: Readonly<{
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body className={roboto.variable}>
-        
+      <body className={`${roboto.variable} `}>
         <TanStackProvider>
-          <Header />
-          <main>
-            {children}
-            {modal}
-          </main>
-          <Footer />
+          <AuthProvider> {/* <-- додаємо провайдер */}
+            <Header />
+            <main>{/* className={style.main}*/}
+              {children}
+              {modal}
+            </main>
+            <footer> {/*className={style.footer}*/}
+              <p>
+                Created <time dateTime="2025">2025</time>
+              </p>
+            </footer>
+          </AuthProvider> 
         </TanStackProvider>
       </body>
     </html>
