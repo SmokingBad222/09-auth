@@ -24,8 +24,8 @@ const AuthNavigation = () => {
   }
   };
 
- 
-  <ul className={css.navigationList}>
+  return (
+    <ul className={css.navigationList}>
       {isAuthenticated ? (
         <>
           <li className={css.navigationItem}>
@@ -55,6 +55,7 @@ const AuthNavigation = () => {
         </>
       )}
     </ul>
+  );
 };
 
 export default AuthNavigation;
