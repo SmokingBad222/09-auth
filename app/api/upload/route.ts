@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { api, ApiError } from '../api';
+import { api } from '../api';
 import { cookies } from 'next/headers';
+import type { AxiosError } from 'axios';
 
 
 export async function POST(request: Request) {
@@ -20,11 +21,12 @@ export async function POST(request: Request) {
 
 
   } catch (error) {
+    const err = error as AxiosError<{ error?: string; message?: string }>;
     return NextResponse.json(
       {
-        error: (error as ApiError).response?.data?.error ?? (error as ApiError).message,
+        error: err.response?.data?.error ?? err.message,
       },
-      { status: (error as ApiError).status }
-    )
+      { status: err.response?.status ?? 500 }
+    );
   }
 }
