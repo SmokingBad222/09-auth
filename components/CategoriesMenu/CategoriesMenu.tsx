@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import css from './TagsMenu.module.css';
+import css from './CategoriesMenu.module.css';
 import { useState } from 'react';
 import { fetchNotes } from '@/lib/api/clientApi';
 import type { Note } from '@/types/note';

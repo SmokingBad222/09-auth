@@ -1,6 +1,6 @@
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import NotesClient from './Notes.client';
 import type { Metadata } from 'next';
 import css from './NotePage.module.css'
