@@ -1,6 +1,6 @@
 import {   dehydrate, QueryClient } from '@tanstack/react-query';
 import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
-import { fetchNoteById } from '@/lib/api';
+import { fetchNoteById } from '@/lib/api/clientApi';
 import NoteDetailsClient from '@/components/NoteDetails/NoteDetails'; 
 import css from './NoteDetails.module.css'
 
