@@ -1,11 +1,11 @@
 'use client';
 
-
+import css from './SignInPage.module.css'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, LoginRequest } from '@/lib/api';
+import { login, LoginRequest } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
-import { ApiError } from '@/app/api/api'
+import { AxiosError } from 'axios';
 
 
 const SignIn = () => {
@@ -26,28 +26,35 @@ const SignIn = () => {
         setError('Invalid email or password');
       }
     } catch (error) {
-      setError(
-        (error as ApiError).response?.data?.error ??
-          (error as ApiError).message ??
-          'Oops... some error'
-      )
-    }
+  const err = error as AxiosError<{ error?: string }>;
+  setError(err.response?.data?.error ?? err.message ?? 'Oops... some error');
+}
   };
 
   return (
-    <form action={handleSubmit}>
-      <h1>Sign in</h1>
-      <label>
-        Email
-        <input type="email" name="email" required />
-      </label>
-      <label>
-        Password
-        <input type="password" name="password" required />
-      </label>
-      <button type="submit">Log in</button>
-      {error && <p>{error}</p>}
-    </form>
+    <main className={css.mainContent}>
+      <form className={css.form} action={handleSubmit}>
+        <h1 className={css.formTitle}>Sign in</h1>
+
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
+          <input id="email" type="email" name="email" className={css.input} required />
+        </div>
+
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
+          <input id="password" type="password" name="password" className={css.input} required />
+        </div>
+
+        <div className={css.actions}>
+          <button type="submit" className={css.submitButton}>
+            Log in
+          </button>
+        </div>
+
+        <p className={css.error}>{error}</p>
+      </form>
+    </main>
   );
 };
 
