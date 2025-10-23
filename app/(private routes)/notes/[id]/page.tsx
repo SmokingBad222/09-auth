@@ -5,11 +5,11 @@ import { Metadata } from 'next';
 import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
 
 type Props = {
-  params: { id: string };
+  params: Promise <{ id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
   const note = await fetchNoteById(id);
 
   return {
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function NoteDetailsPage({ params }: Props) {
-  const { id } = params;
+  const { id } = await params;
 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
