@@ -1,27 +1,34 @@
-import {   dehydrate, QueryClient } from '@tanstack/react-query';
-import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
-import { fetchNoteById } from '@/lib/api/clientApi';
-import NoteDetailsClient from '@/components/NoteDetails/NoteDetails'; 
-import css from './NoteDetails.module.css'
+// app/(private routes)/notes/[id]/NoteDetails.client.tsx
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { fetchNoteById } from '@/lib/api/clientApi'; // <-- clientApi для виклику з браузера
+import css from './NoteDetails.module.css';
 
 type Props = {
-  params: Promise<{ id: string }>;
+  id: string;
 };
 
-export default async function NoteDetailsPage({ params }: Props) {
-  const { id } = await params; 
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
+export default function NoteDetailsClient({ id }: Props) {
+  const { data: note, isLoading, isError } = useQuery({
     queryKey: ['note', id],
     queryFn: () => fetchNoteById(id),
   });
 
-   const dehydratedState = dehydrate(queryClient);
+  if (isLoading) return <p className={css.loading}>Loading note...</p>;
+  if (isError) return <p className={css.error}>Error loading note.</p>;
+  if (!note) return <p className={css.error}>Note not found</p>;
 
   return (
-    <TanStackProvider dehydratedState={dehydratedState}>
-      <NoteDetailsClient id={id} />
-    </TanStackProvider>
+    <div className={css.noteDetails}>
+      <h1 className={css.noteTitle}>{note.title}</h1>
+      <p className={css.noteContent}>{note.content}</p>
+      {note.tag && <p className={css.noteTag}>#{note.tag}</p>}
+      {note.createdAt && (
+        <p className={css.noteDate}>
+          Created at: {new Date(note.createdAt).toLocaleString()}
+        </p>
+      )}
+    </div>
   );
 }
