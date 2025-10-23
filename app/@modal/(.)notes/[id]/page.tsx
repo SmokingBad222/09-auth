@@ -5,7 +5,7 @@ import NotePreviewClient from './NotePreview.client';
 import { HydrationBoundary } from '@tanstack/react-query';
 
 type Props = {
-  params: Promise<{ id: string }>; 
+  params: { id: string }; 
 };
 
 export default async function NoteModalPage({ params }: Props) {

@@ -1,8 +1,7 @@
-// app/(private routes)/notes/[id]/NoteDetails.client.tsx
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchNoteById } from '@/lib/api/clientApi'; // <-- clientApi для виклику з браузера
+import { fetchNoteById } from '@/lib/api/clientApi'; 
 import css from './NoteDetails.module.css';
 
 type Props = {
