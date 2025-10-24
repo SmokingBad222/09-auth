@@ -19,7 +19,7 @@ const Profile = async () => {
         <Link href="/profile/edit">Edit profile</Link>
       </div>
       <div>
-        <Image src={user.photoUrl ?? '/default-avatar.png'} alt="Avatar" width={120} height={120} />
+        <Image src={user.avatar ?? '/default-avatar.png'} alt="Avatar" width={120} height={120} />
         <h2>Username: {user.username}</h2>
         <h2>Email: {user.email}</h2>
       </div>
