@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { parse } from 'cookie';
 import { checkServerSession } from './lib/api/serverApi';
 
-const privateRoutes = ['/profile'];
+const privateRoutes = ['/profile', '/notes', '/notes/filter'];
 const authRoutes = ['/sign-in', '/sign-up'];
 
 export async function middleware(request: NextRequest) {
@@ -17,8 +17,6 @@ export async function middleware(request: NextRequest) {
 
   if (!accessToken) {
     if (refreshToken) {
-      // Якщо accessToken відсутній, але є refreshToken — потрібно перевірити сесію навіть для маршруту аутентифікації,
-      // адже сесія може залишатися активною, і тоді потрібно заборонити доступ до маршруту аутентифікації.
       const data = await checkServerSession();
       const setCookie = data.headers['set-cookie'];
 
@@ -34,53 +32,51 @@ export async function middleware(request: NextRequest) {
           if (parsed.accessToken) cookieStore.set('accessToken', parsed.accessToken, options);
           if (parsed.refreshToken) cookieStore.set('refreshToken', parsed.refreshToken, options);
         }
-        // Якщо сесія все ще активна:
-        // для приватного маршруту — виконуємо редірект на головну.
+
         if (isAuthRoute) {
           return NextResponse.redirect(new URL('/', request.url), {
-            headers: {
-              Cookie: cookieStore.toString(),
-            },
+            headers: { Cookie: cookieStore.toString() },
           });
         }
-        // для приватного маршруту — дозволяємо доступ
+
         if (isPrivateRoute) {
           return NextResponse.next({
-            headers: {
-              Cookie: cookieStore.toString(),
-            },
+            headers: { Cookie: cookieStore.toString() },
           });
         }
       }
     }
-    // Якщо refreshToken або сесії немає:
-    // маршрут аутентифікації — дозволяємо доступ
+
     if (isAuthRoute) {
       return NextResponse.next();
     }
 
-    // приватний маршрут — редірект на сторінку входу
     if (isPrivateRoute) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
   }
 
-  // Якщо accessToken існує:
-  // приватний маршрут — виконуємо редірект на головну
+ 
   if (isAuthRoute) {
     return NextResponse.redirect(new URL('/', request.url));
   }
-  // приватний маршрут — дозволяємо доступ
+
+ 
   if (isPrivateRoute) {
     return NextResponse.next();
   }
+
+ 
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [ '/profile/:path*',
+  matcher: [
+    '/profile/:path*',
     '/notes/:path*',
     '/notes',
     '/notes/filter/:path*',
     '/sign-in',
-    '/sign-up',],
+    '/sign-up',
+  ],
 };

@@ -73,7 +73,7 @@ export const getMe = async (): Promise<User> => {
 
 export type UpdateUserRequest = {
   username?: string;
-  photoUrl?: string;
+  email: string;
 };
 
 export const updateMe = async (payload: UpdateUserRequest): Promise<User> => {
