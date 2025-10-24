@@ -2,7 +2,7 @@
 
 import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import AvatarPicker from '@/components/AvatarPicker/AvatarPicker';
-import { getMe, updateMe, uploadImage } from '@/lib/api/clientApi';
+import { getMe, updateMe} from '@/lib/api/clientApi';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store/authStore';
 
@@ -11,7 +11,7 @@ export default function EditProfile() {
   const { user, setUser } = useAuthStore();
 
   const [username, setUserName] = useState('');
-  const [photoUrl, setPhotoUrl] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [email, setEmail] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function EditProfile() {
   useEffect(() => {
     getMe().then((user) => {
       setUserName(user.username ?? '');
-      setPhotoUrl(user.photoUrl ?? '');
+      setAvatar(user.avatar ?? '');
       setEmail(user.email ?? '');
     });
   }, []);
@@ -34,11 +34,10 @@ export default function EditProfile() {
     setLoading(true);
 
     try {
-      const newPhotoUrl = imageFile ? await uploadImage(imageFile) : photoUrl;
-      const updatedUser = await updateMe({ username, photoUrl: newPhotoUrl });
+      
+      const updatedUser = await updateMe({ email ,username });
 
       setUser(updatedUser);
-
       router.push('/profile');
     } catch (error) {
       console.error('Oops, some error:', error);
@@ -50,7 +49,7 @@ export default function EditProfile() {
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Edit profile</h1>
-      <AvatarPicker profilePhotoUrl={photoUrl} onChangePhoto={setImageFile} />
+      <AvatarPicker profilePhotoUrl={avatar} onChangePhoto={setImageFile} />
 
       <form onSubmit={handleSaveUser} style={{ marginTop: '1.5rem' }}>
         <label>
